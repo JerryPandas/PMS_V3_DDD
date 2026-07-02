@@ -7,7 +7,7 @@ using PMS.Domain.Interfaces;
 namespace PMS.Application.Services;
 
 /// <summary>
-/// 看板用例编排：看板/列/卡片的增删与拖拽移动。
+/// Kanban use case orchestration: CRUD and drag-and-drop for boards/columns/cards.
 /// </summary>
 public class KanbanService : IKanbanService
 {
@@ -34,8 +34,8 @@ public class KanbanService : IKanbanService
         await _uow.KanbanBoards.AddAsync(board, ct);
         await _uow.SaveChangesAsync(ct);
 
-        // 默认创建标准四列，符合常见看板习惯
-        var defaultColumns = new[] { ("待办", "#94a3b8"), ("进行中", "#3b82f6"), ("待验证", "#f59e0b"), ("已完成", "#22c55e") };
+        // Default standard four columns, following common kanban convention
+        var defaultColumns = new[] { ("To Do", "#94a3b8"), ("In Progress", "#3b82f6"), ("In Review", "#f59e0b"), ("Done", "#22c55e") };
         int order = 0;
         foreach (var (name, color) in defaultColumns)
         {
@@ -48,7 +48,7 @@ public class KanbanService : IKanbanService
 
     public async Task<KanbanColumnDto> CreateColumnAsync(int boardId, CreateColumnRequest request, CancellationToken ct = default)
     {
-        _ = await _uow.KanbanBoards.GetByIdAsync(boardId, ct) ?? throw new ApiException("看板不存在", 404);
+        _ = await _uow.KanbanBoards.GetByIdAsync(boardId, ct) ?? throw new ApiException("Board not found", 404);
         var column = new KanbanColumn { BoardId = boardId, Name = request.Name, SortOrder = request.SortOrder, ColorHex = request.ColorHex };
         await _uow.KanbanColumns.AddAsync(column, ct);
         await _uow.SaveChangesAsync(ct);
@@ -57,7 +57,7 @@ public class KanbanService : IKanbanService
 
     public async Task<KanbanCardDto> CreateCardAsync(CreateCardRequest request, CancellationToken ct = default)
     {
-        _ = await _uow.KanbanColumns.GetByIdAsync(request.ColumnId, ct) ?? throw new ApiException("列不存在", 404);
+        _ = await _uow.KanbanColumns.GetByIdAsync(request.ColumnId, ct) ?? throw new ApiException("Column not found", 404);
 
         var maxOrder = _uow.KanbanCards.Query().Where(c => c.ColumnId == request.ColumnId && !c.IsDeleted)
             .Select(c => (int?)c.SortOrder).Max() ?? -1;
@@ -87,7 +87,7 @@ public class KanbanService : IKanbanService
 
     public async Task<KanbanCardDto> UpdateCardAsync(int cardId, UpdateCardRequest request, CancellationToken ct = default)
     {
-        var card = await _uow.KanbanCards.GetByIdAsync(cardId, ct) ?? throw new ApiException("卡片不存在", 404);
+        var card = await _uow.KanbanCards.GetByIdAsync(cardId, ct) ?? throw new ApiException("Card not found", 404);
         card.Title = request.Title;
         card.Description = request.Description;
         card.Priority = request.Priority;
@@ -109,7 +109,7 @@ public class KanbanService : IKanbanService
 
     public async Task MoveCardAsync(MoveCardRequest request, CancellationToken ct = default)
     {
-        var card = await _uow.KanbanCards.GetByIdAsync(request.CardId, ct) ?? throw new ApiException("卡片不存在", 404);
+        var card = await _uow.KanbanCards.GetByIdAsync(request.CardId, ct) ?? throw new ApiException("Card not found", 404);
         card.ColumnId = request.TargetColumnId;
         card.SortOrder = request.TargetSortOrder;
         card.UpdatedAt = DateTime.UtcNow;
@@ -119,7 +119,7 @@ public class KanbanService : IKanbanService
 
     public async Task DeleteCardAsync(int cardId, CancellationToken ct = default)
     {
-        var card = await _uow.KanbanCards.GetByIdAsync(cardId, ct) ?? throw new ApiException("卡片不存在", 404);
+        var card = await _uow.KanbanCards.GetByIdAsync(cardId, ct) ?? throw new ApiException("Card not found", 404);
         card.IsDeleted = true;
         _uow.KanbanCards.Update(card);
         await _uow.SaveChangesAsync(ct);

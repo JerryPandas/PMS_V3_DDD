@@ -22,7 +22,7 @@ export async function logout() {
     try {
       await api.post('/auth/logout', { refreshToken: auth.refreshToken })
     } catch {
-      // 忽略注销请求失败，仍然清空本地令牌
+      // Ignore logout request failure, still clear local tokens
     }
   }
   clearAuth()

@@ -37,7 +37,7 @@ public class PersonnelService : IPersonnelService
 
     public async Task<PersonDto> UpdateAsync(int id, UpsertPersonRequest request, CancellationToken ct = default)
     {
-        var person = await _uow.People.GetByIdAsync(id, ct) ?? throw new ApiException("人员不存在", 404);
+        var person = await _uow.People.GetByIdAsync(id, ct) ?? throw new ApiException("Person not found", 404);
         person.Name = request.Name; person.Department = request.Department; person.Position = request.Position;
         person.Email = request.Email; person.Phone = request.Phone; person.Avatar = request.Avatar;
         person.UpdatedAt = DateTime.UtcNow;
@@ -48,7 +48,7 @@ public class PersonnelService : IPersonnelService
 
     public async Task DeleteAsync(int id, CancellationToken ct = default)
     {
-        var person = await _uow.People.GetByIdAsync(id, ct) ?? throw new ApiException("人员不存在", 404);
+        var person = await _uow.People.GetByIdAsync(id, ct) ?? throw new ApiException("Person not found", 404);
         person.IsDeleted = true;
         _uow.People.Update(person);
         await _uow.SaveChangesAsync(ct);

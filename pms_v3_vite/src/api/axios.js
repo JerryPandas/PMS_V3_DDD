@@ -5,7 +5,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
 
 const api = axios.create({ baseURL })
 
-// 跳转登录页（使用 hash 路由）并清空本地令牌
+// Redirect to login page (using hash routing) and clear local tokens
 function forceLogin() {
   clearAuth()
   if (window.location.hash !== '#/login') {
@@ -13,7 +13,7 @@ function forceLogin() {
   }
 }
 
-// 用刷新令牌换取新的 access/refresh token 对（旋转刷新）
+// Exchange refresh token for new access/refresh token pair (rotation)
 async function performRefresh(refreshToken) {
   const res = await axios.post(`${baseURL}/auth/refresh`, { refreshToken })
   const data = res.data
@@ -28,7 +28,7 @@ async function performRefresh(refreshToken) {
   return data.accessToken
 }
 
-// 并发请求期间只发起一次刷新请求，其余请求排队等待结果
+// Only one refresh request at a time during concurrent requests; others wait for the result
 let refreshPromise = null
 async function getValidAccessToken() {
   const auth = getAuth()
@@ -38,9 +38,9 @@ async function getValidAccessToken() {
     return auth.accessToken
   }
 
-  // AccessToken 已过期（或即将过期）：检查 RefreshToken 是否仍然有效
+  // AccessToken expired (or about to expire): check if RefreshToken is still valid
   if (isRefreshTokenExpired(auth)) {
-    // RefreshToken 也过期（默认 1 天）——必须重新登录
+    // RefreshToken also expired (default 1 day) — must re-login
     forceLogin()
     return null
   }
@@ -58,7 +58,7 @@ async function getValidAccessToken() {
   return refreshPromise
 }
 
-// 请求拦截器：主动检查并刷新即将过期的 AccessToken
+// Request interceptor: proactively check and refresh expiring AccessToken
 api.interceptors.request.use(async (config) => {
   if (!config.skipAuth) {
     const token = await getValidAccessToken()
@@ -69,7 +69,7 @@ api.interceptors.request.use(async (config) => {
   return config
 })
 
-// 响应拦截器：兜底处理 401（例如令牌被服务端提前吊销的情况）
+// Response interceptor: fallback handling of 401 (e.g., token revoked by server)
 api.interceptors.response.use(
   (response) => response,
   async (error) => {

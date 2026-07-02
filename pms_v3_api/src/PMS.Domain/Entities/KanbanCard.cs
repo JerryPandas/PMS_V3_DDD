@@ -4,7 +4,7 @@ using PMS.Domain.Enums;
 namespace PMS.Domain.Entities;
 
 /// <summary>
-/// 看板卡片：具体任务
+/// Kanban card: specific task
 /// </summary>
 public class KanbanCard : BaseEntity
 {

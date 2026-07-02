@@ -7,10 +7,10 @@ import { getUsers, updateUserRole, updateUserActive } from '../api/users'
 import { useAuth } from '../context/AuthContext'
 
 const ROLE_OPTIONS = [
-  { value: 'Admin', label: 'Admin · 系统管理者' },
-  { value: 'Manager', label: 'Manager · 项目管理' },
-  { value: 'Member', label: 'Member · 一般用户' },
-  { value: 'Visitor', label: 'Visitor · 仅查看' }
+  { value: 'Admin', label: 'Admin · System Administrator' },
+  { value: 'Manager', label: 'Manager · Project Manager' },
+  { value: 'Member', label: 'Member · Regular User' },
+  { value: 'Visitor', label: 'Visitor · Read Only' }
 ]
 
 export default function UserManagement() {
@@ -36,9 +36,9 @@ export default function UserManagement() {
 
   return (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: 800, mb: 1 }}>账户与角色管理</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 800, mb: 1 }}>Account & Role Management</Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        设置每个登录账户的角色（Admin / Manager / Member / Visitor），或禁用账户
+        Set the role for each account (Admin / Manager / Member / Visitor), or disable an account
       </Typography>
 
       <Paper>
@@ -46,10 +46,10 @@ export default function UserManagement() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>用户名</TableCell>
-              <TableCell>关联人员</TableCell>
-              <TableCell>角色</TableCell>
-              <TableCell>启用状态</TableCell>
+              <TableCell>Username</TableCell>
+              <TableCell>Linked Person</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Active</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -57,7 +57,7 @@ export default function UserManagement() {
               <TableRow key={u.id} hover>
                 <TableCell sx={{ fontWeight: 600 }}>
                   {u.userName}
-                  {u.userName === currentUser?.userName && <Chip label="当前账号" size="small" sx={{ ml: 1 }} />}
+                  {u.userName === currentUser?.userName && <Chip label="Current" size="small" sx={{ ml: 1 }} />}
                 </TableCell>
                 <TableCell>{u.personName || '—'}</TableCell>
                 <TableCell>
@@ -74,7 +74,7 @@ export default function UserManagement() {
               </TableRow>
             ))}
             {!loading && users.length === 0 && (
-              <TableRow><TableCell colSpan={4} align="center" sx={{ py: 6, color: 'text.secondary' }}>暂无账户</TableCell></TableRow>
+              <TableRow><TableCell colSpan={4} align="center" sx={{ py: 6, color: 'text.secondary' }}>No accounts</TableCell></TableRow>
             )}
           </TableBody>
         </Table>

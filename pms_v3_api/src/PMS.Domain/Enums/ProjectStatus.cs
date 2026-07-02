@@ -1,6 +1,6 @@
 namespace PMS.Domain.Enums;
 
-/// <summary>项目 / 子项状态</summary>
+/// <summary>Project / Item status</summary>
 public enum ProjectStatus
 {
     Planning = 0,

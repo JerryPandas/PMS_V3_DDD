@@ -3,8 +3,8 @@ using PMS.Application.Interfaces;
 namespace PMS.Infrastructure.Security;
 
 /// <summary>
-/// 本地磁盘文件存储实现。生产环境可替换为 Azure Blob / S3 等实现，
-/// 只需实现 IFileStorageService 接口即可（体现依赖倒置 / 可插拔设计）。
+/// Local disk file storage implementation. Can be replaced with Azure Blob / S3 in production,
+/// just implement IFileStorageService interface (demonstrates dependency inversion / pluggable design).
 /// </summary>
 public class LocalFileStorageService : IFileStorageService
 {

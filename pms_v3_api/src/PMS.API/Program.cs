@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,19 +13,19 @@ using PMS.Infrastructure.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ---------- 配置绑定 ----------
+// ---------- Configuration binding ----------
 var jwtSettings = new JwtSettings();
 builder.Configuration.GetSection("Jwt").Bind(jwtSettings);
 builder.Services.AddSingleton(jwtSettings);
 
 var fileRoot = Path.Combine(builder.Environment.ContentRootPath, builder.Configuration["FileStorage:RootPath"] ?? "App_Data/Uploads");
 
-// ---------- 数据库 ----------
+// ---------- Database ----------
 builder.Services.AddDbContext<PmsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-// ---------- DDD 分层依赖注入 ----------
-// Domain 层不依赖任何具体实现；Infrastructure 实现 Domain/Application 定义的接口（依赖倒置）
+// ---------- DDD layered dependency injection ----------
+// Domain layer has no concrete dependencies; Infrastructure implements interfaces defined by Domain/Application (dependency inversion)
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
@@ -38,7 +39,7 @@ builder.Services.AddScoped<IKanbanService, KanbanService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-// ---------- 认证 / JWT ----------
+// ---------- Authentication / JWT ----------
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -55,12 +56,12 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings.Issuer,
         ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-        ClockSkew = TimeSpan.Zero // AccessToken 过期即刻生效，不留宽限
+        ClockSkew = TimeSpan.Zero // AccessToken expiry takes effect immediately, no grace period
     };
 });
 builder.Services.AddAuthorization();
 
-// ---------- CORS（供 Vite 前端跨域访问） ----------
+// ---------- CORS (for Vite frontend cross-origin access) ----------
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
 builder.Services.AddCors(options =>
 {
@@ -72,7 +73,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -83,7 +85,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "输入: Bearer {your access token}"
+        Description = "Input: Bearer {your access token}"
     });
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {

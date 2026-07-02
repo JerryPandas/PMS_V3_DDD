@@ -6,10 +6,10 @@ using PMS.Application.Interfaces;
 namespace PMS.API.Controllers;
 
 /// <summary>
-/// 项目管理。
-/// 权限：所有已登录角色（含 Visitor）均可查看；
-/// 创建/编辑/删除项目仅限 Admin、Manager（Manager 负责管理项目）；
-/// 子项的增删改开放给 Admin、Manager、Member（Member 日常维护自己负责的子项进度）。
+/// Project management.
+/// Permissions: All authenticated roles (including Visitor) can view;
+/// Create/Edit/Delete projects restricted to Admin, Manager (Manager manages projects);
+/// Item CRUD open to Admin, Manager, Member (Member maintains their assigned items' progress).
 /// </summary>
 [ApiController]
 [Route("api/projects")]
@@ -47,7 +47,7 @@ public class ProjectsController : ControllerBase
         return NoContent();
     }
 
-    // ---- 项目子项 (例如 26aa01 项目下的具体小项) ----
+    // ---- Project items (specific sub-items under a project, e.g. 26aa01) ----
 
     [HttpPost("{projectId:int}/items")]
     [Authorize(Roles = "Admin,Manager,Member")]

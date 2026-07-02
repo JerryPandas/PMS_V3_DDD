@@ -1,7 +1,7 @@
 namespace PMS.Domain.Common;
 
 /// <summary>
-/// 所有实体的基类，包含审计字段与软删除标记
+/// Base class for all entities, including audit fields and soft delete flag
 /// </summary>
 public abstract class BaseEntity
 {

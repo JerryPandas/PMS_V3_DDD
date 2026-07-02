@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // 开发环境下将 /api 代理到后端 Web API，避免 CORS 问题
+      // Proxy /api to backend Web API in development to avoid CORS issues
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,

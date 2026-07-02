@@ -86,7 +86,7 @@ export default function ProjectDetail() {
   }
 
   const handleDeleteItem = async (itemId) => {
-    if (!window.confirm('确认删除该子项吗？')) return
+    if (!window.confirm('Delete this item?')) return
     await deleteProjectItem(id, itemId)
     loadProject()
   }
@@ -105,7 +105,7 @@ export default function ProjectDetail() {
   }
 
   const handleDeleteFile = async (fileId) => {
-    if (!window.confirm('确认删除该文件吗？')) return
+    if (!window.confirm('Delete this file?')) return
     await deleteFile(fileId)
     loadFiles()
   }
@@ -115,7 +115,7 @@ export default function ProjectDetail() {
   return (
     <Box>
       <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/projects')} sx={{ mb: 1.5 }}>
-        返回项目列表
+        Back to Projects
       </Button>
 
       <Paper sx={{ p: 3, mb: 2.5 }}>
@@ -132,27 +132,27 @@ export default function ProjectDetail() {
       </Paper>
 
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2 }}>
-        <Tab label="子项" />
-        <Tab label="文件" />
+        <Tab label="Items" />
+        <Tab label="Files" />
       </Tabs>
 
       {tab === 0 && (
         <Paper>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>项目子项</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Project Items</Typography>
             {canWriteContent && (
-              <Button size="small" startIcon={<AddIcon />} onClick={openCreateItem}>添加小项</Button>
+              <Button size="small" startIcon={<AddIcon />} onClick={openCreateItem}>Add Item</Button>
             )}
           </Box>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>名称</TableCell>
-                <TableCell>状态</TableCell>
-                <TableCell width={180}>进度</TableCell>
-                <TableCell>负责人</TableCell>
-                <TableCell>计划完成</TableCell>
-                {canWriteContent && <TableCell align="right">操作</TableCell>}
+                <TableCell>Name</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell width={180}>Progress</TableCell>
+                <TableCell>Owner</TableCell>
+                <TableCell>Planned End</TableCell>
+                {canWriteContent && <TableCell align="right">Actions</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -180,7 +180,7 @@ export default function ProjectDetail() {
                 </TableRow>
               ))}
               {project.items.length === 0 && (
-                <TableRow><TableCell colSpan={6} align="center" sx={{ py: 5, color: 'text.secondary' }}>暂无子项</TableCell></TableRow>
+                <TableRow><TableCell colSpan={6} align="center" sx={{ py: 5, color: 'text.secondary' }}>No items</TableCell></TableRow>
               )}
             </TableBody>
           </Table>
@@ -190,10 +190,10 @@ export default function ProjectDetail() {
       {tab === 1 && (
         <Paper sx={{ p: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>项目文件</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>Project Files</Typography>
             {canWriteContent && (
               <Button component="label" size="small" startIcon={<UploadIcon />} disabled={uploading}>
-                {uploading ? '上传中…' : '上传文件'}
+                {uploading ? 'Uploading…' : 'Upload File'}
                 <input type="file" hidden onChange={handleUpload} />
               </Button>
             )}
@@ -223,35 +223,35 @@ export default function ProjectDetail() {
               </ListItem>
             ))}
             {files.length === 0 && (
-              <Typography color="text.secondary" sx={{ py: 4, textAlign: 'center' }}>暂无上传文件</Typography>
+              <Typography color="text.secondary" sx={{ py: 4, textAlign: 'center' }}>No files uploaded</Typography>
             )}
           </List>
         </Paper>
       )}
 
       <Dialog open={itemDialogOpen} onClose={() => setItemDialogOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>{editingItemId ? '编辑子项' : '添加小项'}</DialogTitle>
+        <DialogTitle>{editingItemId ? 'Edit Item' : 'Add Item'}</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
-          <TextField label="名称" fullWidth autoFocus value={itemForm.name} onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })} />
-          <TextField label="描述" fullWidth multiline minRows={2} value={itemForm.description} onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })} />
-          <TextField select label="状态" fullWidth value={itemForm.status} onChange={(e) => setItemForm({ ...itemForm, status: e.target.value })}>
+          <TextField label="Name" fullWidth autoFocus value={itemForm.name} onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })} />
+          <TextField label="Description" fullWidth multiline minRows={2} value={itemForm.description} onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })} />
+          <TextField select label="Status" fullWidth value={itemForm.status} onChange={(e) => setItemForm({ ...itemForm, status: e.target.value })}>
             {STATUS_OPTIONS.map((o) => <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>)}
           </TextField>
           <TextField
-            label="进度 (%)" type="number" fullWidth
+            label="Progress (%)" type="number" fullWidth
             inputProps={{ min: 0, max: 100 }}
             value={itemForm.progress} onChange={(e) => setItemForm({ ...itemForm, progress: e.target.value })}
           />
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <TextField label="计划开始" type="date" fullWidth InputLabelProps={{ shrink: true }} value={itemForm.plannedStart} onChange={(e) => setItemForm({ ...itemForm, plannedStart: e.target.value })} />
-            <TextField label="计划完成" type="date" fullWidth InputLabelProps={{ shrink: true }} value={itemForm.plannedEnd} onChange={(e) => setItemForm({ ...itemForm, plannedEnd: e.target.value })} />
+            <TextField label="Planned Start" type="date" fullWidth InputLabelProps={{ shrink: true }} value={itemForm.plannedStart} onChange={(e) => setItemForm({ ...itemForm, plannedStart: e.target.value })} />
+            <TextField label="Planned End" type="date" fullWidth InputLabelProps={{ shrink: true }} value={itemForm.plannedEnd} onChange={(e) => setItemForm({ ...itemForm, plannedEnd: e.target.value })} />
           </Box>
-          <TextField label="实际完成" type="date" fullWidth InputLabelProps={{ shrink: true }} value={itemForm.actualEnd} onChange={(e) => setItemForm({ ...itemForm, actualEnd: e.target.value })} />
+          <TextField label="Actual End" type="date" fullWidth InputLabelProps={{ shrink: true }} value={itemForm.actualEnd} onChange={(e) => setItemForm({ ...itemForm, actualEnd: e.target.value })} />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setItemDialogOpen(false)}>取消</Button>
+          <Button onClick={() => setItemDialogOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleSaveItem} disabled={saving || !itemForm.name}>
-            {saving ? '保存中…' : '保存'}
+            {saving ? 'Saving…' : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,8 +1,8 @@
 namespace PMS.Application.Common;
 
 /// <summary>
-/// JWT 配置项，对应 appsettings.json 的 "Jwt" 节点。
-/// AccessTokenExpireMinutes = 30，RefreshTokenExpireDays = 1，均可在配置文件中调整。
+/// JWT configuration, corresponding to the "Jwt" section in appsettings.json.
+/// AccessTokenExpireMinutes = 30, RefreshTokenExpireDays = 1, both configurable in settings file.
 /// </summary>
 public class JwtSettings
 {

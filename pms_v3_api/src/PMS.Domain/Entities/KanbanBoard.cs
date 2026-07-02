@@ -3,7 +3,7 @@ using PMS.Domain.Common;
 namespace PMS.Domain.Entities;
 
 /// <summary>
-/// 看板（每个项目可以有一个或多个看板）
+/// Kanban board (each project can have one or more boards)
 /// </summary>
 public class KanbanBoard : BaseEntity
 {

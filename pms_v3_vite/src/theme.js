@@ -1,13 +1,13 @@
 import { createTheme } from '@mui/material/styles'
 
 /**
- * 深藏青 + 金色主题，风格沉稳、适合工程/制造类内部系统。
- * 色板：
- *  - 主色（藏青）  #0B1F3A
- *  - 主色浅  #14335C
- *  - 强调色（金）  #C9A227
- *  - 背景  #F5F6F8
- *  - 文字  #1A1F2B
+ * Deep navy blue + gold theme, calm style suitable for engineering/manufacturing internal systems.
+ * Palette:
+ *  - Primary (navy)       #0B1F3A
+ *  - Primary light        #14335C
+ *  - Accent (gold)        #C9A227
+ *  - Background           #F5F6F8
+ *  - Text                 #1A1F2B
  */
 const theme = createTheme({
   palette: {

@@ -21,7 +21,7 @@ export default function Login() {
       const redirectTo = location.state?.from || '/'
       navigate(redirectTo, { replace: true })
     } catch (err) {
-      setError(err.response?.data?.message || '登录失败，请检查用户名和密码')
+      setError(err.response?.data?.message || 'Login failed. Please check your username and password.')
     } finally {
       setLoading(false)
     }
@@ -33,21 +33,21 @@ export default function Login() {
       bgcolor: 'primary.main', backgroundImage: 'radial-gradient(circle at 20% 20%, rgba(201,162,39,0.12), transparent 40%)'
     }}>
       <Paper elevation={0} sx={{ width: 380, p: 4, borderRadius: 3 }}>
-        <Typography variant="h5" sx={{ fontWeight: 800, mb: 0.5 }}>欢迎回来</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 800, mb: 0.5 }}>Welcome Back</Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          登录项目管理系统 PMS
+          Sign in to PMS
         </Typography>
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
-            fullWidth label="用户名" margin="normal" autoFocus
+            fullWidth label="Username" margin="normal" autoFocus
             value={userName} onChange={(e) => setUserName(e.target.value)}
             required
           />
           <TextField
-            fullWidth label="密码" type="password" margin="normal"
+            fullWidth label="Password" type="password" margin="normal"
             value={password} onChange={(e) => setPassword(e.target.value)}
             required
           />
@@ -56,10 +56,10 @@ export default function Login() {
             size="large" sx={{ mt: 3, mb: 1.5, py: 1.1 }}
             disabled={loading}
           >
-            {loading ? '登录中…' : '登录'}
+            {loading ? 'Signing in…' : 'Sign In'}
           </Button>
           <Typography variant="body2" align="center" color="text.secondary">
-            还没有账号？<Link component={RouterLink} to="/register">立即注册</Link>
+            Don't have an account? <Link component={RouterLink} to="/register">Register Now</Link>
           </Typography>
         </Box>
       </Paper>

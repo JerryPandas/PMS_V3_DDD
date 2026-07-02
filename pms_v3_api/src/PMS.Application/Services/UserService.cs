@@ -20,9 +20,9 @@ public class UserService : IUserService
     public async Task<UserDto> UpdateRoleAsync(int userId, string role, CancellationToken ct = default)
     {
         if (!Enum.TryParse<UserRole>(role, ignoreCase: true, out var parsedRole))
-            throw new ApiException("无效的角色，必须是 Admin / Manager / Member / Visitor 之一", 400);
+            throw new ApiException("Invalid role, must be one of: Admin / Manager / Member / Visitor", 400);
 
-        var user = await _uow.Users.GetByIdAsync(userId, ct) ?? throw new ApiException("用户不存在", 404);
+        var user = await _uow.Users.GetByIdAsync(userId, ct) ?? throw new ApiException("User not found", 404);
         user.Role = parsedRole;
         user.UpdatedAt = DateTime.UtcNow;
         _uow.Users.Update(user);
@@ -33,7 +33,7 @@ public class UserService : IUserService
 
     public async Task<UserDto> UpdateActiveAsync(int userId, bool isActive, CancellationToken ct = default)
     {
-        var user = await _uow.Users.GetByIdAsync(userId, ct) ?? throw new ApiException("用户不存在", 404);
+        var user = await _uow.Users.GetByIdAsync(userId, ct) ?? throw new ApiException("User not found", 404);
         user.IsActive = isActive;
         user.UpdatedAt = DateTime.UtcNow;
         _uow.Users.Update(user);

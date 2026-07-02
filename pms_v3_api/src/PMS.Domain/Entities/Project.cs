@@ -4,12 +4,12 @@ using PMS.Domain.Enums;
 namespace PMS.Domain.Entities;
 
 /// <summary>
-/// 项目聚合根。项目编号形如 "26aa01"（年份+项目代号+序号）。
-/// 一个项目下可以有多个子项（ProjectItem），子项各自跟踪进度与状态。
+/// Project aggregate root. Project number format: "26aa01" (year + project code + sequence).
+/// A project can have multiple sub-items (ProjectItem), each tracking its own progress and status.
 /// </summary>
 public class Project : BaseEntity
 {
-    /// <summary>项目号，例如 26aa01，业务唯一</summary>
+    /// <summary>Project number, e.g. 26aa01, unique business identifier</summary>
     public string ProjectNo { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }

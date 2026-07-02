@@ -6,7 +6,7 @@ using PMS.Domain.Interfaces;
 namespace PMS.Application.Services;
 
 /// <summary>
-/// 汇总统计服务，为前端 MUI Charts 提供图表数据源。
+/// Dashboard statistics service, provides chart data sources for frontend MUI Charts.
 /// </summary>
 public class DashboardService : IDashboardService
 {
@@ -25,7 +25,7 @@ public class DashboardService : IDashboardService
             .Select(g => new StatusCountDto(g.Key.ToString(), g.Count()))
             .ToList();
 
-        var doneColumnIds = columns.Where(c => c.Name == "已完成").Select(c => c.Id).ToHashSet();
+        var doneColumnIds = columns.Where(c => c.Name == "Done").Select(c => c.Id).ToHashSet();
 
         var assignees = _uow.KanbanCardAssignees.Query().ToList();
         var workloads = people.Select(p =>

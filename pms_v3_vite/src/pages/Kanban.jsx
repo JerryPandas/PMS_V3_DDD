@@ -51,7 +51,7 @@ export default function Kanban() {
 
   const refreshCurrentBoard = () => loadBoards(projectId)
 
-  // ---- 拖拽移动卡片 ----
+  // ---- Drag and drop card ----
   const handleDragStart = (e, card) => {
     e.dataTransfer.setData('text/plain', JSON.stringify({ cardId: card.id }))
   }
@@ -64,7 +64,7 @@ export default function Kanban() {
     refreshCurrentBoard()
   }
 
-  // ---- 卡片新建/编辑 ----
+  // ---- Create/Edit card ----
   const openAddCard = (column) => setCardDialog({ open: true, mode: 'create', column, card: null })
   const openEditCard = (card) => setCardDialog({ open: true, mode: 'edit', column: null, card })
   const closeCardDialog = () => setCardDialog({ open: false, mode: 'create', column: null, card: null })
@@ -82,17 +82,17 @@ export default function Kanban() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 112px)' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, gap: 2, flexWrap: 'wrap' }}>
-        <Typography variant="h5" sx={{ fontWeight: 800 }}>看板</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 800 }}>Kanban</Typography>
         <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
           <Select size="small" displayEmpty value={projectId} onChange={(e) => setProjectId(e.target.value)} sx={{ minWidth: 200 }}>
-            <MenuItem value="">全部项目</MenuItem>
+            <MenuItem value="">All Projects</MenuItem>
             {projects.map((p) => <MenuItem key={p.id} value={p.id}>{p.projectNo} · {p.name}</MenuItem>)}
           </Select>
           <Select size="small" displayEmpty value={boardId} onChange={(e) => setBoardId(e.target.value)} sx={{ minWidth: 160 }}>
             {boards.map((b) => <MenuItem key={b.id} value={b.id}>{b.name}</MenuItem>)}
           </Select>
           {canWriteContent && (
-            <Button size="small" startIcon={<AddIcon />} onClick={() => setNewBoardOpen(true)}>新建看板</Button>
+            <Button size="small" startIcon={<AddIcon />} onClick={() => setNewBoardOpen(true)}>New Board</Button>
           )}
         </Box>
       </Box>
@@ -117,21 +117,21 @@ export default function Kanban() {
 
       {!loading && !currentBoard && (
         <Typography color="text.secondary" sx={{ mt: 6, textAlign: 'center' }}>
-          暂无看板，点击「新建看板」创建一个
+          No boards. Click "New Board" to create one
         </Typography>
       )}
 
       <Dialog open={newBoardOpen} onClose={() => setNewBoardOpen(false)} fullWidth maxWidth="xs">
-        <DialogTitle>新建看板</DialogTitle>
+        <DialogTitle>New Board</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus fullWidth label="看板名称" sx={{ mt: 1 }}
+            autoFocus fullWidth label="Board Name" sx={{ mt: 1 }}
             value={newBoardName} onChange={(e) => setNewBoardName(e.target.value)}
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setNewBoardOpen(false)}>取消</Button>
-          <Button variant="contained" onClick={handleCreateBoard} disabled={!newBoardName}>创建</Button>
+          <Button onClick={() => setNewBoardOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleCreateBoard} disabled={!newBoardName}>Create</Button>
         </DialogActions>
       </Dialog>
 

@@ -4,7 +4,7 @@ using PMS.Domain.Entities;
 namespace PMS.Infrastructure.Persistence;
 
 /// <summary>
-/// EF Core 数据上下文。所有表名加前缀由各实体配置类统一指定（可选）。
+/// EF Core data context. Table name prefixes can be specified by entity configuration classes (optional).
 /// </summary>
 public class PmsDbContext : DbContext
 {
@@ -25,7 +25,7 @@ public class PmsDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PmsDbContext).Assembly);
 
-        // 全局软删除过滤器
+        // Global soft delete query filters
         modelBuilder.Entity<Project>().HasQueryFilter(p => !p.IsDeleted);
         modelBuilder.Entity<ProjectItem>().HasQueryFilter(p => !p.IsDeleted);
         modelBuilder.Entity<ProjectFile>().HasQueryFilter(p => !p.IsDeleted);

@@ -26,10 +26,10 @@ public class FileService : IFileService
 
     public async Task<ProjectFileDto> UploadAsync(int projectId, Stream content, string fileName, string contentType, long size, int? uploadedById, CancellationToken ct = default)
     {
-        _ = await _uow.Projects.GetByIdAsync(projectId, ct) ?? throw new ApiException("项目不存在", 404);
+        _ = await _uow.Projects.GetByIdAsync(projectId, ct) ?? throw new ApiException("Project not found", 404);
 
         const long maxSize = 50 * 1024 * 1024; // 50MB
-        if (size > maxSize) throw new ApiException("文件大小超过限制 (50MB)", 400);
+        if (size > maxSize) throw new ApiException("File size exceeds limit (50MB)", 400);
 
         var (stored, relPath) = await _storage.SaveAsync(content, fileName, projectId, ct);
 
@@ -61,7 +61,7 @@ public class FileService : IFileService
 
     public async Task DeleteAsync(int fileId, CancellationToken ct = default)
     {
-        var file = await _uow.ProjectFiles.GetByIdAsync(fileId, ct) ?? throw new ApiException("文件不存在", 404);
+        var file = await _uow.ProjectFiles.GetByIdAsync(fileId, ct) ?? throw new ApiException("File not found", 404);
         file.IsDeleted = true;
         _uow.ProjectFiles.Update(file);
         await _uow.SaveChangesAsync(ct);

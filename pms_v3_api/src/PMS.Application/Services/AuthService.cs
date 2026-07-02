@@ -7,8 +7,8 @@ using PMS.Domain.Interfaces;
 namespace PMS.Application.Services;
 
 /// <summary>
-/// 认证用例编排：注册 / 登录 / 刷新令牌 / 注销。
-/// 具体的密码哈希与 JWT 签发通过接口交给 Infrastructure 层实现（依赖倒置）。
+/// Authentication use case orchestration: Register / Login / Refresh Token / Logout.
+/// Password hashing and JWT issuance are delegated to Infrastructure layer via interfaces (dependency inversion).
 /// </summary>
 public class AuthService : IAuthService
 {
@@ -29,7 +29,7 @@ public class AuthService : IAuthService
     {
         var existing = await _uow.Users.ListAsync(u => u.UserName == request.UserName, ct);
         if (existing.Count > 0)
-            throw new ApiException("用户名已存在", 409);
+            throw new ApiException("Username already exists", 409);
 
         var user = new User
         {
@@ -49,7 +49,7 @@ public class AuthService : IAuthService
         var users = await _uow.Users.ListAsync(u => u.UserName == request.UserName, ct);
         var user = users.FirstOrDefault();
         if (user is null || !user.IsActive || !_hasher.Verify(request.Password, user.PasswordHash))
-            throw new ApiException("用户名或密码错误", 401);
+            throw new ApiException("Invalid username or password", 401);
 
         return await IssueTokensAsync(user, ip, ct);
     }
@@ -59,13 +59,13 @@ public class AuthService : IAuthService
         var tokens = await _uow.RefreshTokens.ListAsync(t => t.Token == refreshToken, ct);
         var existing = tokens.FirstOrDefault();
         if (existing is null || !existing.IsActive)
-            throw new ApiException("刷新令牌无效或已过期，请重新登录", 401);
+            throw new ApiException("Refresh token is invalid or expired, please log in again", 401);
 
         var user = await _uow.Users.GetByIdAsync(existing.UserId, ct);
         if (user is null || !user.IsActive)
-            throw new ApiException("用户不存在或已被禁用", 401);
+            throw new ApiException("User does not exist or has been disabled", 401);
 
-        // 旋转刷新令牌：旧的立即作废，签发新的一对令牌
+        // Rotate refresh token: invalidate old one immediately, issue a new pair
         existing.IsRevoked = true;
 
         var response = await IssueTokensAsync(user, ip, ct);

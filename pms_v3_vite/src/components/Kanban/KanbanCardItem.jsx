@@ -2,10 +2,10 @@ import { Paper, Typography, Box, Chip, Avatar, AvatarGroup } from '@mui/material
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined'
 
 const PRIORITY_META = {
-  Low: { label: '低', color: '#5B6472' },
-  Normal: { label: '普通', color: '#14335C' },
-  High: { label: '高', color: '#C9A227' },
-  Urgent: { label: '紧急', color: '#B3432B' }
+  Low: { label: 'Low', color: '#5B6472' },
+  Normal: { label: 'Normal', color: '#14335C' },
+  High: { label: 'High', color: '#C9A227' },
+  Urgent: { label: 'Urgent', color: '#B3432B' }
 }
 
 export default function KanbanCardItem({ card, onDragStart, onClick, readOnly = false }) {

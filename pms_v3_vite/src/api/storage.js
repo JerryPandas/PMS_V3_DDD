@@ -1,7 +1,7 @@
 /**
- * 认证令牌本地存储封装。
- * 结构: { accessToken, accessTokenExpiresAt, refreshToken, refreshTokenExpiresAt, userName, role }
- * 时间字段统一保存为 ISO 字符串（后端返回的 UTC 时间）。
+ * Authentication token local storage wrapper.
+ * Structure: { accessToken, accessTokenExpiresAt, refreshToken, refreshTokenExpiresAt, userName, role }
+ * Time fields stored as ISO strings (UTC time returned by backend).
  */
 const KEY = 'pms_auth'
 
@@ -25,7 +25,7 @@ export function clearAuth() {
 
 export function isAccessTokenExpired(auth) {
   if (!auth?.accessTokenExpiresAt) return true
-  // 提前 15 秒判定过期，留出请求往返时间余量
+  // Consider expired 15 seconds early to account for request round-trip time
   return Date.now() >= new Date(auth.accessTokenExpiresAt).getTime() - 15000
 }
 

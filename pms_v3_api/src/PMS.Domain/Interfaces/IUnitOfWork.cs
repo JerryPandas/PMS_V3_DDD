@@ -3,7 +3,7 @@ using PMS.Domain.Entities;
 namespace PMS.Domain.Interfaces;
 
 /// <summary>
-/// 工作单元：统一管理仓储实例与事务提交
+/// Unit of work: centrally manages repository instances and transaction commits
 /// </summary>
 public interface IUnitOfWork : IDisposable
 {

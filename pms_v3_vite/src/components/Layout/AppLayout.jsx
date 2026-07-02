@@ -15,7 +15,7 @@ import { usePermissions } from '../../hooks/usePermissions'
 
 const drawerWidth = 232
 
-const ROLE_LABELS = { Admin: '系统管理者', Manager: '项目管理', Member: '一般用户', Visitor: '仅查看' }
+const ROLE_LABELS = { Admin: 'System Administrator', Manager: 'Project Manager', Member: 'Regular User', Visitor: 'Read Only' }
 
 export default function AppLayout() {
   const navigate = useNavigate()
@@ -25,13 +25,13 @@ export default function AppLayout() {
   const [anchorEl, setAnchorEl] = useState(null)
 
   const navItems = [
-    { label: '仪表盘', path: '/', icon: <DashboardIcon /> },
-    { label: '项目', path: '/projects', icon: <ProjectsIcon /> },
-    { label: '看板', path: '/kanban', icon: <KanbanIcon /> },
-    // 人员管理界面对 Visitor 完全隐藏
-    ...(canViewPersonnel ? [{ label: '人员管理', path: '/personnel', icon: <PeopleIcon /> }] : []),
-    // 账户与角色管理仅 Admin 可见
-    ...(canManageUsers ? [{ label: '账户管理', path: '/users', icon: <AdminIcon /> }] : [])
+    { label: 'Dashboard', path: '/', icon: <DashboardIcon /> },
+    { label: 'Projects', path: '/projects', icon: <ProjectsIcon /> },
+    { label: 'Kanban', path: '/kanban', icon: <KanbanIcon /> },
+    // Personnel management page is completely hidden from Visitor
+    ...(canViewPersonnel ? [{ label: 'Personnel', path: '/personnel', icon: <PeopleIcon /> }] : []),
+    // Account & role management visible to Admin only
+    ...(canManageUsers ? [{ label: 'Account Management', path: '/users', icon: <AdminIcon /> }] : [])
   ]
 
   const handleLogout = async () => {
@@ -57,7 +57,7 @@ export default function AppLayout() {
       >
         <Toolbar sx={{ px: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: 1 }}>
-            PMS <Box component="span" sx={{ color: 'secondary.main' }}>项目管理</Box>
+            PMS <Box component="span" sx={{ color: 'secondary.main' }}>Project Management</Box>
           </Typography>
         </Toolbar>
         <List sx={{ px: 1.5, mt: 1 }}>
@@ -86,7 +86,7 @@ export default function AppLayout() {
         {isVisitor && (
           <Box sx={{ px: 2.5, mt: 'auto', mb: 2 }}>
             <Chip
-              size="small" label="仅查看模式" color="warning"
+              size="small" label="Read Only Mode" color="warning"
               sx={{ bgcolor: 'rgba(201,162,39,0.18)', color: 'secondary.main', fontWeight: 700 }}
             />
           </Box>
@@ -109,7 +109,7 @@ export default function AppLayout() {
               <Divider />
               <MenuItem onClick={handleLogout}>
                 <ListItemIcon><LogoutIcon fontSize="small" /></ListItemIcon>
-                退出登录
+                Sign Out
               </MenuItem>
             </Menu>
           </Toolbar>

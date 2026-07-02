@@ -7,7 +7,7 @@ using PMS.Infrastructure.Persistence;
 namespace PMS.Infrastructure.Persistence.Repositories;
 
 /// <summary>
-/// 基于 EF Core 的通用仓储实现
+/// EF Core-based generic repository implementation
 /// </summary>
 public class Repository<T> : IRepository<T> where T : BaseEntity
 {

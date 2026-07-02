@@ -12,8 +12,8 @@ import Personnel from './pages/Personnel'
 import UserManagement from './pages/UserManagement'
 import NotFound from './pages/NotFound'
 
-// 使用 Hash 路由（createHashRouter），无需服务端额外配置 history fallback，
-// 适合部署在 IIS / 静态资源托管等环境。
+// Using Hash routing (createHashRouter), no server-side history fallback configuration needed,
+// suitable for deployment in IIS / static hosting environments.
 const router = createHashRouter([
   { path: '/login', element: <Login /> },
   { path: '/register', element: <Register /> },
@@ -28,12 +28,12 @@ const router = createHashRouter([
           { path: '/projects/:id', element: <ProjectDetail /> },
           { path: '/kanban', element: <Kanban /> },
           {
-            // 人员管理界面：Visitor 完全不可见（对应后端 PersonnelController 的角色限制）
+            // Personnel management: completely hidden from Visitor (matches backend PersonnelController role restriction)
             element: <RequireRole roles={['Admin', 'Manager', 'Member']} />,
             children: [{ path: '/personnel', element: <Personnel /> }]
           },
           {
-            // 账户与角色管理：仅 Admin 可见
+            // Account & role management: visible to Admin only
             element: <RequireRole roles={['Admin']} />,
             children: [{ path: '/users', element: <UserManagement /> }]
           }

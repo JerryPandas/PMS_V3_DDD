@@ -1,6 +1,6 @@
 namespace PMS.Domain.Enums;
 
-/// <summary>看板卡片优先级</summary>
+/// <summary>Kanban card priority</summary>
 public enum CardPriority
 {
     Low = 0,

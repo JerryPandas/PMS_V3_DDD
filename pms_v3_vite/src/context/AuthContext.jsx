@@ -7,7 +7,7 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => authApi.currentUser())
 
-  // 监听其他标签页登出（storage 事件）以及 axios 拦截器强制跳转登录时同步状态
+  // Listen for logout from other tabs (storage event) and sync state when axios interceptor forces login redirect
   useEffect(() => {
     const sync = () => setUser(authApi.currentUser())
     window.addEventListener('storage', sync)
@@ -46,6 +46,6 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth 必须在 AuthProvider 内部使用')
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
   return ctx
 }

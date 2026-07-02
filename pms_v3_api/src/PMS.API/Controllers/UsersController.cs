@@ -6,9 +6,9 @@ using PMS.Application.Interfaces;
 namespace PMS.API.Controllers;
 
 /// <summary>
-/// 账户与角色管理：仅 Admin 可访问。
-/// 用于把某个登录账户（User）设置为 Admin / Manager / Member / Visitor 之一，
-/// 或者禁用某个账户（IsActive=false 后该账户将无法登录）。
+/// Account & role management: Admin only.
+/// Used to set a login account (User) to Admin / Manager / Member / Visitor,
+/// or disable an account (IsActive=false prevents login).
 /// </summary>
 [ApiController]
 [Route("api/users")]

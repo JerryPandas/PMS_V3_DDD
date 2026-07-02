@@ -4,8 +4,8 @@ using PMS.Domain.Enums;
 namespace PMS.Domain.Entities;
 
 /// <summary>
-/// 项目子项（属于某个 Project 的具体工作项/子任务），
-/// 例如 26aa01 项目下的 "结构设计"、"样机试制" 等子项。
+/// Project sub-item (specific work item/sub-task belonging to a Project),
+/// e.g. items like "Structure Design", "Prototype Trial" under project 26aa01.
 /// </summary>
 public class ProjectItem : BaseEntity
 {
@@ -16,7 +16,7 @@ public class ProjectItem : BaseEntity
     public string? Description { get; set; }
     public ProjectStatus Status { get; set; } = ProjectStatus.Planning;
 
-    /// <summary>进度百分比 0-100</summary>
+    /// <summary>Progress percentage 0-100</summary>
     public int Progress { get; set; } = 0;
 
     public DateTime? PlannedStart { get; set; }

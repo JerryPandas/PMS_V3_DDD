@@ -10,8 +10,8 @@ using PMS.Domain.Entities;
 namespace PMS.Infrastructure.Security;
 
 /// <summary>
-/// JWT 签发实现。AccessToken 使用对称密钥签名，有效期由配置 Jwt:AccessTokenExpireMinutes 控制（默认 30 分钟）。
-/// RefreshToken 只是一个高熵随机字符串，落库保存并绑定过期时间（默认 1 天），不含任何声明信息。
+/// JWT token generation. AccessToken signed with symmetric key, validity controlled by Jwt:AccessTokenExpireMinutes (default 30 min).
+/// RefreshToken is a high-entropy random string stored in DB with expiry (default 1 day), no claims.
 /// </summary>
 public class JwtService : IJwtService
 {

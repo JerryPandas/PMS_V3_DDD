@@ -4,8 +4,8 @@ using PMS.Domain.Common;
 namespace PMS.Domain.Interfaces;
 
 /// <summary>
-/// 通用仓储接口（Domain 层只定义契约，具体实现放在 Infrastructure 层，
-/// 这是 DDD 中依赖倒置原则的体现）
+/// Generic repository interface (Domain layer only defines contracts, concrete implementations in Infrastructure layer,
+/// this embodies the Dependency Inversion Principle in DDD)
 /// </summary>
 public interface IRepository<T> where T : BaseEntity
 {

@@ -3,7 +3,7 @@ using PMS.Domain.Common;
 namespace PMS.Domain.Entities;
 
 /// <summary>
-/// 看板列，例如：待办 / 进行中 / 待验证 / 已完成
+/// Kanban column, e.g.: To Do / In Progress / In Review / Done
 /// </summary>
 public class KanbanColumn : BaseEntity
 {

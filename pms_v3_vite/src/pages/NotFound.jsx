@@ -6,8 +6,8 @@ export default function NotFound() {
   return (
     <Box sx={{ textAlign: 'center', mt: 10 }}>
       <Typography variant="h2" sx={{ fontWeight: 800, color: 'primary.main' }}>404</Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>页面不存在</Typography>
-      <Button variant="contained" onClick={() => navigate('/')}>返回首页</Button>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>Page Not Found</Typography>
+      <Button variant="contained" onClick={() => navigate('/')}>Go Home</Button>
     </Box>
   )
 }

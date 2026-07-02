@@ -6,7 +6,7 @@ import { LineChart } from '@mui/x-charts/LineChart'
 import { getDashboardSummary } from '../api/dashboard'
 
 const STATUS_LABELS = {
-  Planning: '规划中', InProgress: '进行中', OnHold: '已暂停', Completed: '已完成', Cancelled: '已取消'
+  Planning: 'Planning', InProgress: 'In Progress', OnHold: 'On Hold', Completed: 'Completed', Cancelled: 'Cancelled'
 }
 const STATUS_COLORS = ['#0B1F3A', '#C9A227', '#5B6472', '#2E7D5B', '#B3432B']
 
@@ -42,21 +42,21 @@ export default function Dashboard() {
 
   return (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: 800, mb: 3 }}>仪表盘</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 800, mb: 3 }}>Dashboard</Typography>
 
       <Grid container spacing={2.5} sx={{ mb: 1 }}>
-        <Grid item xs={12} sm={6} md={3}><StatCard label="项目总数" value={data.totalProjects} /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard label="进行中项目" value={data.activeProjects} /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard label="人员总数" value={data.totalPeople} /></Grid>
-        <Grid item xs={12} sm={6} md={3}><StatCard label="看板卡片总数" value={data.totalCards} /></Grid>
+        <Grid item xs={12} sm={6} md={3}><StatCard label="Total Projects" value={data.totalProjects} /></Grid>
+        <Grid item xs={12} sm={6} md={3}><StatCard label="Active Projects" value={data.activeProjects} /></Grid>
+        <Grid item xs={12} sm={6} md={3}><StatCard label="Total Personnel" value={data.totalPeople} /></Grid>
+        <Grid item xs={12} sm={6} md={3}><StatCard label="Total Cards" value={data.totalCards} /></Grid>
       </Grid>
 
       <Grid container spacing={2.5} sx={{ mt: 0.5 }}>
         <Grid item xs={12} md={5}>
           <Paper sx={{ p: 2.5, height: 360 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>项目状态分布</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>Project Status Distribution</Typography>
             {pieData.length === 0 ? (
-              <Typography color="text.secondary" sx={{ mt: 4 }}>暂无项目数据</Typography>
+              <Typography color="text.secondary" sx={{ mt: 4 }}>No project data</Typography>
             ) : (
               <PieChart
                 series={[{ data: pieData, innerRadius: 50, outerRadius: 120, paddingAngle: 2, cornerRadius: 4 }]}
@@ -68,17 +68,17 @@ export default function Dashboard() {
 
         <Grid item xs={12} md={7}>
           <Paper sx={{ p: 2.5, height: 360 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>人员任务负载</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>Personnel Workload</Typography>
             {data.workloads.length === 0 ? (
-              <Typography color="text.secondary" sx={{ mt: 4 }}>暂无看板任务数据</Typography>
+              <Typography color="text.secondary" sx={{ mt: 4 }}>No kanban task data</Typography>
             ) : (
               <BarChart
                 height={280}
                 dataset={data.workloads}
                 xAxis={[{ scaleType: 'band', dataKey: 'personName' }]}
                 series={[
-                  { dataKey: 'totalCards', label: '总任务数', color: '#14335C' },
-                  { dataKey: 'doneCards', label: '已完成', color: '#C9A227' }
+                  { dataKey: 'totalCards', label: 'Total Tasks', color: '#14335C' },
+                  { dataKey: 'doneCards', label: 'Completed', color: '#C9A227' }
                 ]}
               />
             )}
@@ -87,14 +87,14 @@ export default function Dashboard() {
 
         <Grid item xs={12}>
           <Paper sx={{ p: 2.5, height: 340 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>近 6 个月子项趋势</Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>Last 6 Months Trend</Typography>
             <LineChart
               height={260}
               dataset={data.monthlyTrends}
               xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
               series={[
-                { dataKey: 'newItems', label: '新增子项', color: '#0B1F3A', curve: 'monotoneX' },
-                { dataKey: 'completedItems', label: '完成子项', color: '#C9A227', curve: 'monotoneX' }
+                { dataKey: 'newItems', label: 'New Items', color: '#0B1F3A', curve: 'monotoneX' },
+                { dataKey: 'completedItems', label: 'Completed Items', color: '#C9A227', curve: 'monotoneX' }
               ]}
             />
           </Paper>

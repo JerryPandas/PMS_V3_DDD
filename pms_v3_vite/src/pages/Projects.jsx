@@ -11,11 +11,11 @@ import { getProjects, createProject, deleteProject } from '../api/projects'
 import { usePermissions } from '../hooks/usePermissions'
 
 const STATUS_OPTIONS = [
-  { value: 'Planning', label: '规划中', color: 'default' },
-  { value: 'InProgress', label: '进行中', color: 'primary' },
-  { value: 'OnHold', label: '已暂停', color: 'warning' },
-  { value: 'Completed', label: '已完成', color: 'success' },
-  { value: 'Cancelled', label: '已取消', color: 'error' }
+  { value: 'Planning', label: 'Planning', color: 'default' },
+  { value: 'InProgress', label: 'In Progress', color: 'primary' },
+  { value: 'OnHold', label: 'On Hold', color: 'warning' },
+  { value: 'Completed', label: 'Completed', color: 'success' },
+  { value: 'Cancelled', label: 'Cancelled', color: 'error' }
 ]
 
 function statusChip(status) {
@@ -53,7 +53,7 @@ export default function Projects() {
 
   const handleDelete = async (e, id) => {
     e.stopPropagation()
-    if (!window.confirm('确认删除该项目吗？')) return
+    if (!window.confirm('Delete this project?')) return
     await deleteProject(id)
     load()
   }
@@ -61,9 +61,9 @@ export default function Projects() {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5" sx={{ fontWeight: 800 }}>项目列表</Typography>
+        <Typography variant="h5" sx={{ fontWeight: 800 }}>Projects</Typography>
         {canManageProjects && (
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>新建项目</Button>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>New Project</Button>
         )}
       </Box>
 
@@ -72,12 +72,12 @@ export default function Projects() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>项目号</TableCell>
-              <TableCell>项目名称</TableCell>
-              <TableCell>负责人</TableCell>
-              <TableCell>状态</TableCell>
-              <TableCell>子项进度</TableCell>
-              {canManageProjects && <TableCell align="right">操作</TableCell>}
+              <TableCell>Project No.</TableCell>
+              <TableCell>Project Name</TableCell>
+              <TableCell>Manager</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Items Progress</TableCell>
+              {canManageProjects && <TableCell align="right">Actions</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -98,38 +98,38 @@ export default function Projects() {
               </TableRow>
             ))}
             {!loading && projects.length === 0 && (
-              <TableRow><TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.secondary' }}>{canManageProjects ? '暂无项目，点击右上角新建' : '暂无项目'}</TableCell></TableRow>
+              <TableRow><TableCell colSpan={6} align="center" sx={{ py: 6, color: 'text.secondary' }}>{canManageProjects ? 'No projects. Click "New Project" to create one' : 'No projects'}</TableCell></TableRow>
             )}
           </TableBody>
         </Table>
       </Paper>
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>新建项目</DialogTitle>
+        <DialogTitle>New Project</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField
-            label="项目号" placeholder="例如 26aa01" fullWidth autoFocus
+            label="Project No." placeholder="e.g. 26aa01" fullWidth autoFocus
             value={form.projectNo} onChange={(e) => setForm({ ...form, projectNo: e.target.value })}
           />
           <TextField
-            label="项目名称" fullWidth
+            label="Project Name" fullWidth
             value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
           <TextField
-            label="描述" fullWidth multiline minRows={2}
+            label="Description" fullWidth multiline minRows={2}
             value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
           <TextField
-            select label="状态" fullWidth value={form.status}
+            select label="Status" fullWidth value={form.status}
             onChange={(e) => setForm({ ...form, status: e.target.value })}
           >
             {STATUS_OPTIONS.map((o) => <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>)}
           </TextField>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setDialogOpen(false)}>取消</Button>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleCreate} disabled={saving || !form.projectNo || !form.name}>
-            {saving ? '创建中…' : '创建'}
+            {saving ? 'Creating…' : 'Create'}
           </Button>
         </DialogActions>
       </Dialog>

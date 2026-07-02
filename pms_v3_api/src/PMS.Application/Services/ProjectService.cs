@@ -7,7 +7,7 @@ using PMS.Domain.Interfaces;
 namespace PMS.Application.Services;
 
 /// <summary>
-/// 项目 / 项目子项用例编排。
+/// Project / project item use case orchestration.
 /// </summary>
 public class ProjectService : IProjectService
 {
@@ -65,7 +65,7 @@ public class ProjectService : IProjectService
     public async Task<ProjectDto> CreateProjectAsync(UpsertProjectRequest request, CancellationToken ct = default)
     {
         var dup = await _uow.Projects.ListAsync(p => p.ProjectNo == request.ProjectNo && !p.IsDeleted, ct);
-        if (dup.Count > 0) throw new ApiException($"项目号 {request.ProjectNo} 已存在", 409);
+        if (dup.Count > 0) throw new ApiException($"Project number {request.ProjectNo} already exists", 409);
 
         var project = new Project
         {
@@ -87,7 +87,7 @@ public class ProjectService : IProjectService
     public async Task<ProjectDto> UpdateProjectAsync(int id, UpsertProjectRequest request, CancellationToken ct = default)
     {
         var project = await _uow.Projects.GetByIdAsync(id, ct)
-            ?? throw new ApiException("项目不存在", 404);
+            ?? throw new ApiException("Project not found", 404);
 
         project.ProjectNo = request.ProjectNo;
         project.Name = request.Name;
@@ -108,7 +108,7 @@ public class ProjectService : IProjectService
     public async Task DeleteProjectAsync(int id, CancellationToken ct = default)
     {
         var project = await _uow.Projects.GetByIdAsync(id, ct)
-            ?? throw new ApiException("项目不存在", 404);
+            ?? throw new ApiException("Project not found", 404);
         project.IsDeleted = true;
         _uow.Projects.Update(project);
         await _uow.SaveChangesAsync(ct);
@@ -116,7 +116,7 @@ public class ProjectService : IProjectService
 
     public async Task<ProjectItemDto> AddItemAsync(int projectId, UpsertProjectItemRequest request, CancellationToken ct = default)
     {
-        _ = await _uow.Projects.GetByIdAsync(projectId, ct) ?? throw new ApiException("项目不存在", 404);
+        _ = await _uow.Projects.GetByIdAsync(projectId, ct) ?? throw new ApiException("Project not found", 404);
 
         var item = new ProjectItem
         {
@@ -141,7 +141,7 @@ public class ProjectService : IProjectService
     public async Task<ProjectItemDto> UpdateItemAsync(int projectId, int itemId, UpsertProjectItemRequest request, CancellationToken ct = default)
     {
         var item = await _uow.ProjectItems.GetByIdAsync(itemId, ct);
-        if (item is null || item.ProjectId != projectId) throw new ApiException("子项不存在", 404);
+        if (item is null || item.ProjectId != projectId) throw new ApiException("Item not found", 404);
 
         item.Name = request.Name;
         item.Description = request.Description;
@@ -164,7 +164,7 @@ public class ProjectService : IProjectService
     public async Task DeleteItemAsync(int projectId, int itemId, CancellationToken ct = default)
     {
         var item = await _uow.ProjectItems.GetByIdAsync(itemId, ct);
-        if (item is null || item.ProjectId != projectId) throw new ApiException("子项不存在", 404);
+        if (item is null || item.ProjectId != projectId) throw new ApiException("Item not found", 404);
         item.IsDeleted = true;
         _uow.ProjectItems.Update(item);
         await _uow.SaveChangesAsync(ct);

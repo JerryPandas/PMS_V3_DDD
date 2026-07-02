@@ -1,7 +1,7 @@
 namespace PMS.Application.Common;
 
 /// <summary>
-/// 业务异常，携带 HTTP 状态码，由全局异常中间件统一转换为 ProblemDetails 响应。
+/// Business exception carrying HTTP status code, converted to ProblemDetails response by global exception middleware.
 /// </summary>
 public class ApiException : Exception
 {

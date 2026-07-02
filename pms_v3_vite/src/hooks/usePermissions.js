@@ -1,12 +1,12 @@
 import { useAuth } from '../context/AuthContext'
 
 /**
- * 基于当前登录用户角色的权限判断集中封装。
- * 角色定义（与后端 UserRole 枚举 / Controller 上的 [Authorize(Roles=...)] 一一对应）：
- *   Admin   - 系统管理者，全部权限
- *   Manager - 管理项目（项目/子项/看板/文件的增删改）
- *   Member  - 一般用户（看板/子项/文件的日常操作，不能创建/删除项目）
- *   Visitor - 只读，且完全不能进入人员管理界面
+ * Centralized permission check based on current user's role.
+ * Role definitions (mapping to backend UserRole enum / [Authorize(Roles=...)] on Controllers):
+ *   Admin   - System administrator, full access
+ *   Manager - Manages projects (CRUD on projects/items/kanban/files)
+ *   Member  - Regular user (daily operations on kanban/items/files, cannot create/delete projects)
+ *   Visitor - Read-only, cannot access personnel management
  */
 export function usePermissions() {
   const { user } = useAuth()
@@ -23,15 +23,15 @@ export function usePermissions() {
     isManager,
     isMember,
     isVisitor,
-    // 项目结构（创建/编辑/删除项目本身）：Admin、Manager
+    // Project management (create/edit/delete projects): Admin, Manager
     canManageProjects: isAdmin || isManager,
-    // 日常内容操作（子项、看板卡片、文件上传/删除）：Admin、Manager、Member
+    // Daily content operations (items, kanban cards, file upload/delete): Admin, Manager, Member
     canWriteContent: isAdmin || isManager || isMember,
-    // 人员管理界面：Visitor 完全不可见；查看权限给 Admin/Manager/Member
+    // Personnel management: hidden from Visitor; view access for Admin/Manager/Member
     canViewPersonnel: isAdmin || isManager || isMember,
-    // 人员档案的增删改：仅 Admin
+    // Personnel CRUD: Admin only
     canManagePersonnel: isAdmin,
-    // 账户与角色管理：仅 Admin
+    // Account & role management: Admin only
     canManageUsers: isAdmin
   }
 }
