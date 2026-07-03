@@ -52,7 +52,7 @@ export default function KanbanCardDialog({ open, mode, initialCard, people, onCl
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>{mode === 'edit' ? 'Edit Card' : 'New Card'}</DialogTitle>
-      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '1rem !important' }}>
         <TextField label="Title" fullWidth autoFocus value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
         <TextField label="Description" fullWidth multiline minRows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         <Box sx={{ display: 'flex', gap: 2 }}>

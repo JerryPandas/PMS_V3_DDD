@@ -31,7 +31,7 @@ export default function AppLayout() {
     // Personnel management page is completely hidden from Visitor
     ...(canViewPersonnel ? [{ label: 'Personnel', path: '/personnel', icon: <PeopleIcon /> }] : []),
     // Account & role management visible to Admin only
-    ...(canManageUsers ? [{ label: 'Account Management', path: '/users', icon: <AdminIcon /> }] : [])
+    ...(canManageUsers ? [{ label: 'Management', path: '/users', icon: <AdminIcon /> }] : [])
   ]
 
   const handleLogout = async () => {
@@ -57,7 +57,7 @@ export default function AppLayout() {
       >
         <Toolbar sx={{ px: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: 1 }}>
-            PMS <Box component="span" sx={{ color: 'secondary.main' }}>Project Management</Box>
+            PMS{/* PMS <Box component="span" sx={{ color: 'secondary.main' }}>Project Management</Box> */}
           </Typography>
         </Toolbar>
         <List sx={{ px: 1.5, mt: 1 }}>

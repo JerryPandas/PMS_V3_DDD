@@ -105,7 +105,7 @@ export default function Personnel() {
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="sm">
         <DialogTitle>{editingId ? 'Edit Person' : 'Add Person'}</DialogTitle>
-        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+        <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '1rem !important' }}>
           <TextField label="Name" fullWidth autoFocus value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           <TextField label="Department" fullWidth value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} />
           <TextField label="Position" fullWidth value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} />
