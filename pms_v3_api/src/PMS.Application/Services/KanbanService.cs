@@ -117,6 +117,31 @@ public class KanbanService : IKanbanService
         await _uow.SaveChangesAsync(ct);
     }
 
+    public async Task ReorderCardsAsync(ReorderCardsRequest request, CancellationToken ct = default)
+    {
+        var allIds = request.Columns.SelectMany(c => c.CardIds).Distinct().ToList();
+        if (allIds.Count == 0) return;
+
+        var cards = _uow.KanbanCards.Query().Where(c => allIds.Contains(c.Id) && !c.IsDeleted).ToList();
+        var byId = cards.ToDictionary(c => c.Id);
+
+        foreach (var col in request.Columns)
+        {
+            for (int i = 0; i < col.CardIds.Count; i++)
+            {
+                if (byId.TryGetValue(col.CardIds[i], out var card))
+                {
+                    card.ColumnId = col.ColumnId;
+                    card.SortOrder = i;
+                    card.UpdatedAt = DateTime.UtcNow;
+                    _uow.KanbanCards.Update(card);
+                }
+            }
+        }
+
+        await _uow.SaveChangesAsync(ct);
+    }
+
     public async Task DeleteCardAsync(int cardId, CancellationToken ct = default)
     {
         var card = await _uow.KanbanCards.GetByIdAsync(cardId, ct) ?? throw new ApiException("Card not found", 404);
@@ -124,6 +149,7 @@ public class KanbanService : IKanbanService
         _uow.KanbanCards.Update(card);
         await _uow.SaveChangesAsync(ct);
     }
+
 
     private KanbanBoardDto MapBoard(KanbanBoard board)
     {

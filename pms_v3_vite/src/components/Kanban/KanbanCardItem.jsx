@@ -1,4 +1,5 @@
 import { Paper, Typography, Box, Chip, Avatar, AvatarGroup } from '@mui/material'
+import { Draggable } from '@hello-pangea/dnd'
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined'
 
 const PRIORITY_META = {
@@ -8,14 +9,12 @@ const PRIORITY_META = {
   Urgent: { label: 'Urgent', color: '#B3432B' }
 }
 
-export default function KanbanCardItem({ card, onDragStart, onClick, readOnly = false }) {
+export default function KanbanCardItem({ card, index, onClick, readOnly = false }) {
   const meta = PRIORITY_META[card.priority] || PRIORITY_META.Normal
-  return (
+  const content = (
     <Paper
-      draggable={!readOnly}
-      onDragStart={(e) => !readOnly && onDragStart(e, card)}
-      onClick={() => !readOnly && onClick(card)}
       elevation={0}
+      onClick={() => !readOnly && onClick(card)}
       sx={{
         p: 1.5, mb: 1.2, borderRadius: 2, cursor: readOnly ? 'default' : 'grab',
         border: '1px solid rgba(11,31,58,0.08)',
@@ -40,5 +39,22 @@ export default function KanbanCardItem({ card, onDragStart, onClick, readOnly = 
         </AvatarGroup>
       )}
     </Paper>
+  )
+
+  if (readOnly) return content
+
+  return (
+    <Draggable draggableId={String(card.id)} index={index}>
+      {(provided, snapshot) => (
+        <Box
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          sx={snapshot.isDragging ? { borderRadius: 2, '& > *': { boxShadow: '0 4px 16px rgba(11,31,58,0.2)' } } : undefined}
+        >
+          {content}
+        </Box>
+      )}
+    </Draggable>
   )
 }

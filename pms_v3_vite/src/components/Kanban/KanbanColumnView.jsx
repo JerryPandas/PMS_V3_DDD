@@ -1,12 +1,11 @@
 import { Box, Paper, Typography, Chip, IconButton } from '@mui/material'
+import { Droppable } from '@hello-pangea/dnd'
 import AddIcon from '@mui/icons-material/Add'
 import KanbanCardItem from './KanbanCardItem'
 
-export default function KanbanColumnView({ column, onDragStart, onDrop, onCardClick, onAddCard, readOnly = false }) {
+export default function KanbanColumnView({ column, onCardClick, onAddCard, readOnly = false }) {
   return (
     <Paper
-      onDragOver={(e) => !readOnly && e.preventDefault()}
-      onDrop={(e) => !readOnly && onDrop(e, column)}
       sx={{ width: 300, flexShrink: 0, p: 1.5, bgcolor: '#F0F2F5', display: 'flex', flexDirection: 'column', maxHeight: '100%' }}
       elevation={0}
     >
@@ -20,17 +19,26 @@ export default function KanbanColumnView({ column, onDragStart, onDrop, onCardCl
           <IconButton size="small" onClick={() => onAddCard(column)}><AddIcon fontSize="small" /></IconButton>
         )}
       </Box>
-      <Box sx={{ overflowY: 'auto', flexGrow: 1, px: 0.5 }}>
-        {column.cards.map((card) => (
-          <KanbanCardItem
-            key={card.id}
-            card={card}
-            onDragStart={onDragStart}
-            onClick={onCardClick}
-            readOnly={readOnly}
-          />
-        ))}
-      </Box>
+      <Droppable droppableId={String(column.id)} isDropDisabled={readOnly}>
+        {(provided, snapshot) => (
+          <Box
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            sx={{ overflowY: 'auto', flexGrow: 1, px: 0.5, minHeight: 8, transition: 'background 0.2s', bgcolor: snapshot.isDraggingOver && !readOnly ? 'rgba(11,31,58,0.04)' : 'transparent' }}
+          >
+            {column.cards.map((card, index) => (
+              <KanbanCardItem
+                key={card.id}
+                card={card}
+                index={index}
+                onClick={onCardClick}
+                readOnly={readOnly}
+              />
+            ))}
+            {provided.placeholder}
+          </Box>
+        )}
+      </Droppable>
     </Paper>
   )
 }

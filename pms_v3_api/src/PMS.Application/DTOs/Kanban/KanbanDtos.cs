@@ -22,3 +22,9 @@ public record UpdateCardRequest(string Title, string? Description, CardPriority 
 
 /// <summary>拖拽移动卡片到目标列的指定顺序位置</summary>
 public record MoveCardRequest(int CardId, int TargetColumnId, int TargetSortOrder);
+
+/// <summary>整列卡片重排（含跨列移动）：按给定顺序重写每张卡的列与排序</summary>
+public record ReorderCardsRequest(List<ColumnCardOrder> Columns);
+
+/// <summary>某一列的有序卡片 id 列表</summary>
+public record ColumnCardOrder(int ColumnId, List<int> CardIds);

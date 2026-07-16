@@ -57,6 +57,15 @@ public class KanbanController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>整列/跨列卡片重排，按给定顺序持久化列与排序</summary>
+    [HttpPost("cards/reorder")]
+    [Authorize(Roles = "Admin,Manager,Member")]
+    public async Task<IActionResult> ReorderCards(ReorderCardsRequest request)
+    {
+        await _service.ReorderCardsAsync(request);
+        return NoContent();
+    }
+
     [HttpDelete("cards/{cardId:int}")]
     [Authorize(Roles = "Admin,Manager,Member")]
     public async Task<IActionResult> DeleteCard(int cardId)

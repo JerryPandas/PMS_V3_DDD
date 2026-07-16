@@ -7,4 +7,5 @@ export const createColumn = (boardId, payload) => api.post(`/kanban/boards/${boa
 export const createCard = (payload) => api.post('/kanban/cards', payload).then(r => r.data)
 export const updateCard = (cardId, payload) => api.put(`/kanban/cards/${cardId}`, payload).then(r => r.data)
 export const moveCard = (payload) => api.post('/kanban/cards/move', payload).then(r => r.data)
+export const reorderCards = (payload) => api.post('/kanban/cards/reorder', payload).then(r => r.data)
 export const deleteCard = (cardId) => api.delete(`/kanban/cards/${cardId}`).then(r => r.data)

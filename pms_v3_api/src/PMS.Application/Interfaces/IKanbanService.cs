@@ -13,5 +13,6 @@ public interface IKanbanService
     Task<KanbanCardDto> CreateCardAsync(CreateCardRequest request, CancellationToken ct = default);
     Task<KanbanCardDto> UpdateCardAsync(int cardId, UpdateCardRequest request, CancellationToken ct = default);
     Task MoveCardAsync(MoveCardRequest request, CancellationToken ct = default);
+    Task ReorderCardsAsync(ReorderCardsRequest request, CancellationToken ct = default);
     Task DeleteCardAsync(int cardId, CancellationToken ct = default);
 }

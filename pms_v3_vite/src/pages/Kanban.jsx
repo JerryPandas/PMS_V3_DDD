@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { DragDropContext } from '@hello-pangea/dnd'
 import {
   Box, Typography, Button, MenuItem, TextField, Select, LinearProgress,
   Dialog, DialogTitle, DialogContent, DialogActions
@@ -6,7 +7,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import { getProjects } from '../api/projects'
 import { getPeople } from '../api/personnel'
-import { getBoards, createBoard, createCard, updateCard, moveCard, deleteCard } from '../api/kanban'
+import { getBoards, createBoard, createCard, updateCard, reorderCards, deleteCard } from '../api/kanban'
 import KanbanColumnView from '../components/Kanban/KanbanColumnView'
 import KanbanCardDialog from '../components/Kanban/KanbanCardDialog'
 import { usePermissions } from '../hooks/usePermissions'
@@ -52,47 +53,50 @@ export default function Kanban() {
   const refreshCurrentBoard = () => loadBoards(projectId)
 
   // ---- Drag and drop card ----
-  const handleDragStart = (e, card) => {
-    e.dataTransfer.setData('text/plain', JSON.stringify({ cardId: card.id }))
-    e.dataTransfer.effectAllowed = 'move'
-  }
+  const onDragEnd = async (result) => {
+    const { source, destination } = result
+    if (!destination) return
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return
 
-  const handleDrop = async (e, targetColumn) => {
-    e.preventDefault()
-    let cardId
-    try {
-      cardId = JSON.parse(e.dataTransfer.getData('text/plain')).cardId
-    } catch {
-      return
+    const sourceColumn = currentBoard?.columns.find((c) => String(c.id) === source.droppableId)
+    const destColumn = currentBoard?.columns.find((c) => String(c.id) === destination.droppableId)
+    if (!sourceColumn || !destColumn) return
+
+    const movedCard = sourceColumn.cards[source.index]
+    if (!movedCard) return
+
+    // Compute the next local state (whole card moved, custom order)
+    const nextBoard = {
+      ...currentBoard,
+      columns: currentBoard.columns.map((col) => {
+        if (col.id === sourceColumn.id && col.id === destColumn.id) {
+          const next = col.cards.filter((c) => c.id !== movedCard.id)
+          next.splice(destination.index, 0, movedCard)
+          return { ...col, cards: next }
+        }
+        if (col.id === sourceColumn.id) {
+          return { ...col, cards: col.cards.filter((c) => c.id !== movedCard.id) }
+        }
+        if (col.id === destColumn.id) {
+          const next = [...col.cards]
+          next.splice(destination.index, 0, movedCard)
+          return { ...col, cards: next }
+        }
+        return col
+      })
     }
-    if (!cardId) return
 
-    const sourceColumn = currentBoard?.columns.find((col) => col.cards.some((c) => c.id === cardId))
-    const card = sourceColumn?.cards.find((c) => c.id === cardId)
-    if (!sourceColumn || !card) return
-    if (sourceColumn.id === targetColumn.id) return
+    // Optimistic update
+    setBoards((prev) => prev.map((b) => (b.id === boardId ? nextBoard : b)))
 
-    const targetSortOrder = targetColumn.cards.length
-
-    // Move the whole card: remove from source, append to target immediately
-    setBoards((prev) => prev.map((b) => {
-      if (b.id !== boardId) return b
-      return {
-        ...b,
-        columns: b.columns.map((col) => {
-          if (col.id === sourceColumn.id) {
-            return { ...col, cards: col.cards.filter((c) => c.id !== cardId) }
-          }
-          if (col.id === targetColumn.id) {
-            return { ...col, cards: [...col.cards, { ...card, sortOrder: targetSortOrder }] }
-          }
-          return col
-        })
-      }
-    }))
+    // Persist: send ordered card ids for every affected column (reliable custom ordering)
+    const affectedColumns = [...new Set([sourceColumn.id, destColumn.id])]
+    const columnsPayload = nextBoard.columns
+      .filter((c) => affectedColumns.includes(c.id))
+      .map((c) => ({ columnId: c.id, cardIds: c.cards.map((card) => card.id) }))
 
     try {
-      await moveCard({ cardId, targetColumnId: targetColumn.id, targetSortOrder })
+      await reorderCards({ columns: columnsPayload })
     } catch (err) {
       refreshCurrentBoard()
     }
@@ -134,19 +138,19 @@ export default function Kanban() {
       {loading && <LinearProgress sx={{ mb: 2 }} />}
 
       {!loading && currentBoard && (
-        <Box sx={{ display: 'flex', gap: 2, overflowX: 'auto', flexGrow: 1, pb: 1 }}>
-          {currentBoard.columns.map((col) => (
-            <KanbanColumnView
-              key={col.id}
-              column={col}
-              onDragStart={handleDragStart}
-              onDrop={handleDrop}
-              onCardClick={openEditCard}
-              onAddCard={openAddCard}
-              readOnly={!canWriteContent}
-            />
-          ))}
-        </Box>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Box sx={{ display: 'flex', gap: 2, overflowX: 'auto', flexGrow: 1, pb: 1 }}>
+            {currentBoard.columns.map((col) => (
+              <KanbanColumnView
+                key={col.id}
+                column={col}
+                onCardClick={openEditCard}
+                onAddCard={openAddCard}
+                readOnly={!canWriteContent}
+              />
+            ))}
+          </Box>
+        </DragDropContext>
       )}
 
       {!loading && !currentBoard && (
