@@ -54,14 +54,48 @@ export default function Kanban() {
   // ---- Drag and drop card ----
   const handleDragStart = (e, card) => {
     e.dataTransfer.setData('text/plain', JSON.stringify({ cardId: card.id }))
+    e.dataTransfer.effectAllowed = 'move'
   }
 
   const handleDrop = async (e, targetColumn) => {
     e.preventDefault()
-    const data = JSON.parse(e.dataTransfer.getData('text/plain'))
+    let cardId
+    try {
+      cardId = JSON.parse(e.dataTransfer.getData('text/plain')).cardId
+    } catch {
+      return
+    }
+    if (!cardId) return
+
+    const sourceColumn = currentBoard?.columns.find((col) => col.cards.some((c) => c.id === cardId))
+    const card = sourceColumn?.cards.find((c) => c.id === cardId)
+    if (!sourceColumn || !card) return
+    if (sourceColumn.id === targetColumn.id) return
+
     const targetSortOrder = targetColumn.cards.length
-    await moveCard({ cardId: data.cardId, targetColumnId: targetColumn.id, targetSortOrder })
-    refreshCurrentBoard()
+
+    // Move the whole card: remove from source, append to target immediately
+    setBoards((prev) => prev.map((b) => {
+      if (b.id !== boardId) return b
+      return {
+        ...b,
+        columns: b.columns.map((col) => {
+          if (col.id === sourceColumn.id) {
+            return { ...col, cards: col.cards.filter((c) => c.id !== cardId) }
+          }
+          if (col.id === targetColumn.id) {
+            return { ...col, cards: [...col.cards, { ...card, sortOrder: targetSortOrder }] }
+          }
+          return col
+        })
+      }
+    }))
+
+    try {
+      await moveCard({ cardId, targetColumnId: targetColumn.id, targetSortOrder })
+    } catch (err) {
+      refreshCurrentBoard()
+    }
   }
 
   // ---- Create/Edit card ----

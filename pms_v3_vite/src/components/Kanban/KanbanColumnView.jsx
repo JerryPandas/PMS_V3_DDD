@@ -22,7 +22,13 @@ export default function KanbanColumnView({ column, onDragStart, onDrop, onCardCl
       </Box>
       <Box sx={{ overflowY: 'auto', flexGrow: 1, px: 0.5 }}>
         {column.cards.map((card) => (
-          <KanbanCardItem key={card.id} card={card} onDragStart={onDragStart} onClick={onCardClick} readOnly={readOnly} />
+          <KanbanCardItem
+            key={card.id}
+            card={card}
+            onDragStart={onDragStart}
+            onClick={onCardClick}
+            readOnly={readOnly}
+          />
         ))}
       </Box>
     </Paper>
